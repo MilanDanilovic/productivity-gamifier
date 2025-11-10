@@ -67,114 +67,125 @@ export default function TodayPage() {
   const doneMissions = missions?.filter((m) => m.status === 'DONE') || [];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background bg-gradient-to-b from-background via-background/95 to-background/90 particle-effect">
       <Navbar />
-      <div className="container mx-auto p-4 space-y-6">
-        <Card>
+      <div className="container mx-auto p-2 sm:p-4 space-y-4 sm:space-y-6">
+        <Card className="retro-card bg-card/80 backdrop-blur-sm">
           <CardHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div>
-                <CardTitle>Daily Missions</CardTitle>
-                <CardDescription>Manage your daily tasks</CardDescription>
+                <CardTitle className="retro-text text-lg sm:text-2xl text-primary">📋 DAILY MISSIONS 📋</CardTitle>
+                <CardDescription className="text-xs">Manage your daily tasks</CardDescription>
               </div>
-              <div className="flex items-center space-x-4">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
                 <input
                   type="date"
                   value={selectedDate}
                   onChange={(e) => setSelectedDate(e.target.value)}
-                  className="px-3 py-2 border rounded-md bg-background"
+                  className="px-3 py-2 border-2 retro-button bg-background text-xs"
                 />
-                <Button onClick={() => setShowCreateForm(!showCreateForm)}>
-                  {showCreateForm ? 'Cancel' : '+ Add Mission'}
+                <Button onClick={() => setShowCreateForm(!showCreateForm)} className="retro-button text-xs">
+                  {showCreateForm ? 'CANCEL' : '+ ADD MISSION'}
                 </Button>
               </div>
             </div>
           </CardHeader>
           <CardContent>
             {showCreateForm && (
-              <form onSubmit={handleCreateMission} className="mb-4 p-4 border rounded-md">
+              <form onSubmit={handleCreateMission} className="mb-4 p-4 retro-card bg-card/50">
                 <div className="space-y-2">
-                  <Label htmlFor="title">Mission Title</Label>
+                  <Label htmlFor="title" className="retro-text text-xs">MISSION TITLE</Label>
                   <Input
                     id="title"
                     value={newMissionTitle}
                     onChange={(e) => setNewMissionTitle(e.target.value)}
                     placeholder="Enter mission title"
+                    className="retro-button"
                   />
                 </div>
-                <Button type="submit" className="mt-4" disabled={createMission.isPending}>
-                  {createMission.isPending ? 'Creating...' : 'Create Mission'}
+                <Button type="submit" className="mt-4 retro-button w-full text-xs" disabled={createMission.isPending}>
+                  {createMission.isPending ? 'CREATING...' : 'CREATE MISSION'}
                 </Button>
               </form>
             )}
 
-            {isLoading ? (
-              <p className="text-sm text-muted-foreground">Loading...</p>
-            ) : (
-              <div className="space-y-4">
-                {openMissions.length > 0 && (
-                  <div>
-                    <h3 className="text-sm font-medium mb-2">Open Missions</h3>
-                    <div className="space-y-2">
-                      {openMissions.map((mission) => (
-                        <div
-                          key={mission._id}
-                          className="flex items-center space-x-2 p-3 rounded border"
-                        >
-                          <Checkbox
-                            checked={false}
-                            onChange={() => handleCompleteMission(mission._id)}
-                            disabled={completeMission.isPending}
-                          />
-                          <div className="flex-1">
-                            <p className="text-sm font-medium">{mission.title}</p>
-                            {mission.description && (
-                              <p className="text-xs text-muted-foreground">
-                                {mission.description}
-                              </p>
-                            )}
+              {isLoading ? (
+                <p className="text-sm text-muted-foreground retro-text text-center">Loading...</p>
+              ) : (
+                <div className="space-y-4">
+                  {openMissions.length > 0 && (
+                    <div>
+                      <h3 className="retro-text text-xs font-medium mb-2 text-primary">OPEN MISSIONS</h3>
+                      <div className="space-y-2">
+                        {openMissions.map((mission) => (
+                          <div
+                            key={mission._id}
+                            className="retro-card bg-card/50 p-3 hover:scale-105 transition-transform cursor-pointer"
+                            onClick={() => !completeMission.isPending && handleCompleteMission(mission._id)}
+                          >
+                            <div className="flex items-center space-x-3">
+                              <Checkbox
+                                checked={false}
+                                onChange={() => handleCompleteMission(mission._id)}
+                                disabled={completeMission.isPending}
+                                className="flex-shrink-0"
+                              />
+                              <div className="flex-1 min-w-0">
+                                <p className="retro-text text-xs font-medium truncate">{mission.title}</p>
+                                {mission.description && (
+                                  <p className="text-xs text-muted-foreground mt-1 truncate">
+                                    {mission.description}
+                                  </p>
+                                )}
+                              </div>
+                              <Badge variant="secondary" className="retro-text text-xs flex-shrink-0">
+                                +{mission.xpValue} XP
+                              </Badge>
+                            </div>
                           </div>
-                          <Badge variant="secondary">{mission.xpValue} XP</Badge>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
-                {doneMissions.length > 0 && (
-                  <div>
-                    <h3 className="text-sm font-medium mb-2">Completed Missions</h3>
-                    <div className="space-y-2">
-                      {doneMissions.map((mission) => (
-                        <div
-                          key={mission._id}
-                          className="flex items-center space-x-2 p-3 rounded border opacity-60"
-                        >
-                          <Checkbox checked={true} disabled />
-                          <div className="flex-1">
-                            <p className="text-sm font-medium line-through">
-                              {mission.title}
-                            </p>
-                            {mission.description && (
-                              <p className="text-xs text-muted-foreground">
-                                {mission.description}
-                              </p>
-                            )}
+                  {doneMissions.length > 0 && (
+                    <div>
+                      <h3 className="retro-text text-xs font-medium mb-2 text-primary">COMPLETED MISSIONS</h3>
+                      <div className="space-y-2">
+                        {doneMissions.map((mission) => (
+                          <div
+                            key={mission._id}
+                            className="retro-card bg-card/50 p-3 opacity-60"
+                          >
+                            <div className="flex items-center space-x-3">
+                              <Checkbox checked={true} disabled className="flex-shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <p className="retro-text text-xs font-medium line-through truncate">
+                                  {mission.title}
+                                </p>
+                                {mission.description && (
+                                  <p className="text-xs text-muted-foreground mt-1 truncate">
+                                    {mission.description}
+                                  </p>
+                                )}
+                              </div>
+                              <Badge variant="secondary" className="retro-text text-xs flex-shrink-0">
+                                +{mission.xpValue} XP
+                              </Badge>
+                            </div>
                           </div>
-                          <Badge variant="secondary">{mission.xpValue} XP</Badge>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
-                {openMissions.length === 0 && doneMissions.length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-8">
-                    No missions for this date
-                  </p>
-                )}
-              </div>
-            )}
+                  {openMissions.length === 0 && doneMissions.length === 0 && (
+                    <p className="text-sm text-muted-foreground retro-text text-center py-8">
+                      No missions for this date
+                    </p>
+                  )}
+                </div>
+              )}
           </CardContent>
         </Card>
       </div>

@@ -36,9 +36,17 @@ export default function DashboardPage() {
     try {
       await completeMission.mutateAsync(missionId);
       toast({
-        title: 'Mission completed!',
-        description: 'XP and streak updated',
+        title: '🎉 MISSION COMPLETE! 🎉',
+        description: 'XP and streak updated!',
       });
+      // Add shake animation to the mission card
+      const missionElement = document.getElementById(`mission-${missionId}`);
+      if (missionElement) {
+        missionElement.classList.add('shake');
+        setTimeout(() => {
+          missionElement.classList.remove('shake');
+        }, 300);
+      }
     } catch (error: any) {
       toast({
         title: 'Error',
@@ -64,75 +72,86 @@ export default function DashboardPage() {
   const openMissions = missions?.filter((m) => m.status === 'OPEN') || [];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background bg-gradient-to-b from-background via-background/95 to-background/90 particle-effect">
       <Navbar />
-      <div className="container mx-auto p-4 space-y-6">
+      <div className="container mx-auto p-2 sm:p-4 space-y-4 sm:space-y-6">
         {/* Stats Header */}
-        <Card>
+        <Card className="retro-card bg-card/80 backdrop-blur-sm">
           <CardHeader>
-            <CardTitle>Your Progress</CardTitle>
+            <CardTitle className="retro-text text-lg sm:text-2xl text-primary">YOUR PROGRESS</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <p className="text-sm text-muted-foreground">Level</p>
-                <p className="text-2xl font-bold">{user?.level || 1}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+              <div className="retro-card bg-primary/20 p-4 text-center hover:scale-105 transition-all stagger-item cursor-pointer group relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                <p className="text-xs text-muted-foreground mb-2 relative z-10">LEVEL</p>
+                <p className="retro-text text-3xl text-primary pulse-retro relative z-10">{user?.level || 1}</p>
               </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Total XP</p>
-                <p className="text-2xl font-bold">{user?.totalXp || 0}</p>
+              <div className="retro-card bg-primary/20 p-4 text-center hover:scale-105 transition-all stagger-item cursor-pointer group relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                <p className="text-xs text-muted-foreground mb-2 relative z-10">TOTAL XP</p>
+                <p className="retro-text text-3xl text-primary relative z-10">{user?.totalXp || 0}</p>
               </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Streak</p>
-                <p className="text-2xl font-bold">{user?.streakCount || 0} days</p>
+              <div className="retro-card bg-primary/20 p-4 text-center hover:scale-105 transition-all stagger-item cursor-pointer group relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-destructive/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                <p className="text-xs text-muted-foreground mb-2 relative z-10">🔥 STREAK</p>
+                <p className="retro-text text-3xl text-destructive animate-pulse-retro relative z-10">{user?.streakCount || 0} DAYS</p>
               </div>
             </div>
             {user && <XpBar currentXp={user.totalXp} level={user.level} />}
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           {/* Today's Missions */}
-          <Card>
+          <Card className="retro-card bg-card/80 backdrop-blur-sm">
             <CardHeader>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                 <div>
-                  <CardTitle>Today's Missions</CardTitle>
-                  <CardDescription>Complete your daily tasks</CardDescription>
+                  <CardTitle className="retro-text text-sm sm:text-lg text-primary">📋 TODAY MISSIONS</CardTitle>
+                  <CardDescription className="text-xs">Complete your daily tasks</CardDescription>
                 </div>
                 <Link href="/today">
-                  <Button variant="outline" size="sm">
-                    View All
+                  <Button variant="outline" size="sm" className="retro-button text-xs">
+                    VIEW ALL
                   </Button>
                 </Link>
               </div>
             </CardHeader>
             <CardContent>
               {missionsLoading ? (
-                <p className="text-sm text-muted-foreground">Loading...</p>
+                <p className="text-sm text-muted-foreground retro-text">Loading...</p>
               ) : openMissions.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No missions for today</p>
+                <p className="text-sm text-muted-foreground retro-text text-center py-8">No missions for today</p>
               ) : (
-                <div className="space-y-2">
-                  {openMissions.slice(0, 5).map((mission) => (
+                <div className="space-y-3">
+                  {openMissions.slice(0, 5).map((mission, index) => (
                     <div
                       key={mission._id}
-                      className="flex items-center space-x-2 p-2 rounded border"
+                      id={`mission-${mission._id}`}
+                      className="retro-card bg-card/50 p-3 hover:scale-105 transition-all cursor-pointer hover:border-primary/50 hover:shadow-lg stagger-item relative overflow-hidden group"
+                      onClick={() => !completeMission.isPending && handleCompleteMission(mission._id)}
                     >
-                      <Checkbox
-                        checked={mission.status === 'DONE'}
-                        onChange={() => handleCompleteMission(mission._id)}
-                        disabled={completeMission.isPending}
-                      />
-                      <div className="flex-1">
-                        <p className="text-sm font-medium">{mission.title}</p>
-                        {mission.description && (
-                          <p className="text-xs text-muted-foreground">
-                            {mission.description}
-                          </p>
-                        )}
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                      <div className="flex items-center space-x-3 relative z-10">
+                        <Checkbox
+                          checked={mission.status === 'DONE'}
+                          onChange={() => handleCompleteMission(mission._id)}
+                          disabled={completeMission.isPending}
+                          className="flex-shrink-0"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <p className="retro-text text-xs font-medium truncate">{mission.title}</p>
+                          {mission.description && (
+                            <p className="text-xs text-muted-foreground mt-1 truncate">
+                              {mission.description}
+                            </p>
+                          )}
+                        </div>
+                        <Badge variant="secondary" className="retro-text text-xs flex-shrink-0 animate-pulse-retro">
+                          +{mission.xpValue} XP
+                        </Badge>
                       </div>
-                      <Badge variant="secondary">{mission.xpValue} XP</Badge>
                     </div>
                   ))}
                 </div>
@@ -141,16 +160,16 @@ export default function DashboardPage() {
           </Card>
 
           {/* Quests */}
-          <Card>
+          <Card className="retro-card bg-card/80 backdrop-blur-sm">
             <CardHeader>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                 <div>
-                  <CardTitle>Active Quests</CardTitle>
-                  <CardDescription>Your main quests and sub-quests</CardDescription>
+                  <CardTitle className="retro-text text-sm sm:text-lg text-primary">⚔️ ACTIVE QUESTS</CardTitle>
+                  <CardDescription className="text-xs">Your main quests and sub-quests</CardDescription>
                 </div>
                 <Link href="/quests">
-                  <Button variant="outline" size="sm">
-                    View All
+                  <Button variant="outline" size="sm" className="retro-button text-xs">
+                    VIEW ALL
                   </Button>
                 </Link>
               </div>
@@ -158,15 +177,15 @@ export default function DashboardPage() {
             <CardContent className="space-y-4">
               {quests && quests.length > 0 && (
                 <div>
-                  <p className="text-sm font-medium mb-2">Main Quest</p>
+                  <p className="retro-text text-xs font-medium mb-2 text-primary">MAIN QUEST</p>
                   {quests.map((quest) => (
-                    <div key={quest._id} className="p-3 rounded border mb-2">
+                    <div key={quest._id} className="retro-card bg-card/50 p-3 mb-2 hover:scale-105 transition-transform">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm font-medium">{quest.title}</p>
+                          <p className="retro-text text-xs font-medium">{quest.title}</p>
                           {quest.bossFight?.isBoss && (
-                            <Badge variant="destructive" className="mt-1">
-                              Boss Fight
+                            <Badge variant="destructive" className="mt-1 retro-text text-xs pulse-retro">
+                              👹 BOSS FIGHT
                             </Badge>
                           )}
                         </div>
@@ -177,17 +196,17 @@ export default function DashboardPage() {
               )}
               {subQuests && subQuests.length > 0 && (
                 <div>
-                  <p className="text-sm font-medium mb-2">Sub-quests</p>
+                  <p className="retro-text text-xs font-medium mb-2 text-primary">SUB-QUESTS</p>
                   {subQuests.slice(0, 3).map((quest) => (
-                    <div key={quest._id} className="p-3 rounded border mb-2">
-                      <p className="text-sm font-medium">{quest.title}</p>
+                    <div key={quest._id} className="retro-card bg-card/50 p-3 mb-2 hover:scale-105 transition-transform">
+                      <p className="retro-text text-xs font-medium">{quest.title}</p>
                     </div>
                   ))}
                 </div>
               )}
               {(!quests || quests.length === 0) &&
                 (!subQuests || subQuests.length === 0) && (
-                  <p className="text-sm text-muted-foreground">No active quests</p>
+                  <p className="text-sm text-muted-foreground retro-text text-center py-8">No active quests</p>
                 )}
             </CardContent>
           </Card>

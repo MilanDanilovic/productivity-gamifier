@@ -47,11 +47,11 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-background bg-gradient-to-b from-background via-background/95 to-background/90 particle-effect p-2 sm:p-4">
+      <Card className="w-full max-w-md retro-card bg-card/80 backdrop-blur-sm">
         <CardHeader>
-          <CardTitle>Login</CardTitle>
-          <CardDescription>Enter your credentials to access your account</CardDescription>
+          <CardTitle className="retro-text text-xl sm:text-2xl text-primary">⚔️ LOGIN ⚔️</CardTitle>
+          <CardDescription className="text-xs">Enter your credentials to access your account</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -61,6 +61,7 @@ export default function LoginPage() {
                 id="email"
                 type="email"
                 placeholder="you@example.com"
+                className="retro-button"
                 {...register('email')}
               />
               {errors.email && (
@@ -72,14 +73,15 @@ export default function LoginPage() {
               <Input
                 id="password"
                 type="password"
+                className="retro-button"
                 {...register('password')}
               />
               {errors.password && (
                 <p className="text-sm text-destructive">{errors.password.message}</p>
               )}
             </div>
-            <Button type="submit" className="w-full" disabled={login.isPending}>
-              {login.isPending ? 'Logging in...' : 'Login'}
+            <Button type="submit" className="w-full retro-button text-xs" disabled={login.isPending}>
+              {login.isPending ? 'LOGGING IN...' : 'LOGIN'}
             </Button>
             <div className="text-center text-sm">
               Don't have an account?{' '}

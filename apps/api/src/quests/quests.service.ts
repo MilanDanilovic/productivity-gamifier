@@ -17,6 +17,9 @@ export class QuestsService {
     const quest = new this.questModel({
       userId: new Types.ObjectId(userId),
       ...createQuestDto,
+      questId: createQuestDto.questId
+        ? new Types.ObjectId(createQuestDto.questId)
+        : undefined,
       startDate: createQuestDto.startDate
         ? new Date(createQuestDto.startDate)
         : new Date(),

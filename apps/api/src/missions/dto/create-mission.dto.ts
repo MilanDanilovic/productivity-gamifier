@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsDateString, IsNumber, Min } from 'class-validator';
+import { IsString, IsOptional, IsDateString, IsNumber, Min, IsBoolean, IsEnum } from 'class-validator';
 
 export class CreateMissionDto {
   @IsString()
@@ -19,5 +19,13 @@ export class CreateMissionDto {
   @IsNumber()
   @Min(0)
   xpValue?: number;
+
+  @IsOptional()
+  @IsBoolean()
+  isRecurring?: boolean;
+
+  @IsOptional()
+  @IsEnum(['DAILY', 'WEEKLY', 'CUSTOM'])
+  recurringType?: 'DAILY' | 'WEEKLY' | 'CUSTOM';
 }
 

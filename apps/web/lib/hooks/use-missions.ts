@@ -10,6 +10,10 @@ export interface Mission {
   status: 'OPEN' | 'DONE';
   scheduledFor: string;
   xpValue: number;
+  isRecurring?: boolean;
+  recurringType?: 'DAILY' | 'WEEKLY' | 'CUSTOM';
+  lastCompleted?: string;
+  completionCount?: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -85,6 +89,30 @@ export function useCompleteMission() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['missions'] });
       queryClient.invalidateQueries({ queryKey: ['me'] });
+    },
+  });
+}
+
+export function useRecurringMissions() {
+  return useQuery<Mission[]>({
+    queryKey: ['missions', 'recurring'],
+    queryFn: async () => {
+      const response = await api.get('/missions/recurring');
+      return response.data.data;
+    },
+  });
+}
+
+export function useResetRecurringMissions() {
+  const queryClient = useQueryClient();
+
+  return useMutation<Mission[], Error>({
+    mutationFn: async () => {
+      const response = await api.post('/missions/recurring/reset');
+      return response.data.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['missions'] });
     },
   });
 }

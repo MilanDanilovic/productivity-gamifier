@@ -25,6 +25,18 @@ export class Mission {
 
   @Prop({ default: 10 })
   xpValue: number;
+
+  @Prop({ default: false })
+  isRecurring: boolean;
+
+  @Prop({ enum: ['DAILY', 'WEEKLY', 'CUSTOM'], required: false })
+  recurringType?: 'DAILY' | 'WEEKLY' | 'CUSTOM';
+
+  @Prop()
+  lastCompleted?: Date;
+
+  @Prop({ default: 0 })
+  completionCount: number;
 }
 
 export const MissionSchema = SchemaFactory.createForClass(Mission);

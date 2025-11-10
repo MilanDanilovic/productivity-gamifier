@@ -47,11 +47,11 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-background bg-gradient-to-b from-background via-background/95 to-background/90 particle-effect p-2 sm:p-4">
+      <Card className="w-full max-w-md retro-card bg-card/80 backdrop-blur-sm">
         <CardHeader>
-          <CardTitle>Register</CardTitle>
-          <CardDescription>Create a new account to get started</CardDescription>
+          <CardTitle className="retro-text text-xl sm:text-2xl text-primary">🎮 REGISTER 🎮</CardTitle>
+          <CardDescription className="text-xs">Create a new account to get started</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -60,6 +60,7 @@ export default function RegisterPage() {
               <Input
                 id="displayName"
                 placeholder="John Doe"
+                className="retro-button"
                 {...registerField('displayName')}
               />
               {errors.displayName && (
@@ -72,6 +73,7 @@ export default function RegisterPage() {
                 id="email"
                 type="email"
                 placeholder="you@example.com"
+                className="retro-button"
                 {...registerField('email')}
               />
               {errors.email && (
@@ -83,14 +85,15 @@ export default function RegisterPage() {
               <Input
                 id="password"
                 type="password"
+                className="retro-button"
                 {...registerField('password')}
               />
               {errors.password && (
                 <p className="text-sm text-destructive">{errors.password.message}</p>
               )}
             </div>
-            <Button type="submit" className="w-full" disabled={register.isPending}>
-              {register.isPending ? 'Creating account...' : 'Register'}
+            <Button type="submit" className="w-full retro-button text-xs" disabled={register.isPending}>
+              {register.isPending ? 'CREATING ACCOUNT...' : 'REGISTER'}
             </Button>
             <div className="text-center text-sm">
               Already have an account?{' '}

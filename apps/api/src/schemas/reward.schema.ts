@@ -14,6 +14,15 @@ export class Reward {
   @Prop({ required: true })
   xpThreshold: number;
 
+  @Prop({ enum: ['SKIN', 'HAT', 'WEAPON', 'SHIELD', 'ACCESSORY'], default: 'SKIN' })
+  itemType: 'SKIN' | 'HAT' | 'WEAPON' | 'SHIELD' | 'ACCESSORY';
+
+  @Prop()
+  icon?: string;
+
+  @Prop()
+  color?: string;
+
   @Prop()
   claimedAt?: Date;
 }

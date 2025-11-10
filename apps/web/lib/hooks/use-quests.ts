@@ -10,6 +10,7 @@ export interface Quest {
   status: 'ACTIVE' | 'COMPLETED' | 'ARCHIVED';
   startDate?: string;
   dueDate?: string;
+  questId?: string; // For sub-quests to link to main quest
   bossFight?: {
     isBoss: boolean;
     deadline?: string;

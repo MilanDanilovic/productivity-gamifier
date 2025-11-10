@@ -75,11 +75,26 @@ export class MissionsService {
   async markDone(id: string, userId: string) {
     const mission = await this.findOne(id, userId);
 
-    if (mission.status === 'DONE') {
+    if (mission.status === 'DONE' && !mission.isRecurring) {
       return mission;
     }
 
+    // For recurring missions, check if already completed today
+    if (mission.isRecurring && mission.lastCompleted) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const lastCompleted = new Date(mission.lastCompleted);
+      lastCompleted.setHours(0, 0, 0, 0);
+      
+      if (today.getTime() === lastCompleted.getTime()) {
+        // Already completed today
+        return mission;
+      }
+    }
+
     mission.status = 'DONE';
+    mission.lastCompleted = new Date();
+    mission.completionCount = (mission.completionCount || 0) + 1;
     await mission.save();
 
     // Grant XP
@@ -107,6 +122,45 @@ export class MissionsService {
     }
 
     return mission;
+  }
+
+  async findRecurring(userId: string) {
+    return this.missionModel
+      .find({
+        userId: new Types.ObjectId(userId),
+        isRecurring: true,
+      })
+      .sort({ title: 1 })
+      .exec();
+  }
+
+  async resetRecurringMissions(userId: string) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const recurringMissions = await this.findRecurring(userId);
+
+    for (const mission of recurringMissions) {
+      // Check if needs reset based on recurring type
+      let needsReset = false;
+
+      if (mission.recurringType === 'DAILY') {
+        if (!mission.lastCompleted) {
+          needsReset = false; // Never completed, no need to reset
+        } else {
+          const lastCompleted = new Date(mission.lastCompleted);
+          lastCompleted.setHours(0, 0, 0, 0);
+          needsReset = lastCompleted.getTime() < today.getTime();
+        }
+      }
+
+      if (needsReset) {
+        mission.status = 'OPEN';
+        await mission.save();
+      }
+    }
+
+    return recurringMissions;
   }
 }
 

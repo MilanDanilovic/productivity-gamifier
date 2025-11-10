@@ -35,6 +35,16 @@ export class MissionsController {
     return this.missionsService.findAll(user._id.toString(), day, status);
   }
 
+  @Get('recurring')
+  async findRecurring(@CurrentUser() user: UserDocument) {
+    return this.missionsService.findRecurring(user._id.toString());
+  }
+
+  @Post('recurring/reset')
+  async resetRecurring(@CurrentUser() user: UserDocument) {
+    return this.missionsService.resetRecurringMissions(user._id.toString());
+  }
+
   @Post(':id/done')
   async markDone(@Param('id') id: string, @CurrentUser() user: UserDocument) {
     return this.missionsService.markDone(id, user._id.toString());

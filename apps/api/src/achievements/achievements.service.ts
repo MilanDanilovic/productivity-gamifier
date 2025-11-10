@@ -38,15 +38,16 @@ export class AchievementsService {
       description: 'Complete your first mission',
       awardedAt: new Date(),
     });
+    // Icon will be added in frontend based on code
 
     return achievement.save();
   }
 
   async checkAndAwardConsistency(userId: string, streakCount: number) {
     const codes = [
-      { threshold: 3, code: 'CONSISTENCY_I', title: 'Consistency I', desc: '3-day streak' },
-      { threshold: 7, code: 'CONSISTENCY_II', title: 'Consistency II', desc: '7-day streak' },
-      { threshold: 30, code: 'CONSISTENCY_III', title: 'Consistency III', desc: '30-day streak' },
+      { threshold: 3, code: 'CONSISTENCY_I', title: 'Consistency I', desc: 'Maintain a 3-day streak' },
+      { threshold: 7, code: 'CONSISTENCY_II', title: 'Consistency II', desc: 'Maintain a 7-day streak' },
+      { threshold: 30, code: 'CONSISTENCY_III', title: 'Consistency Master', desc: 'Maintain a 30-day streak' },
     ];
 
     const awards = [];
@@ -59,13 +60,14 @@ export class AchievementsService {
         });
 
         if (!existing) {
-          const achievement = new this.achievementModel({
-            userId: new Types.ObjectId(userId),
-            code,
-            title,
-            description: desc,
-            awardedAt: new Date(),
-          });
+        const achievement = new this.achievementModel({
+          userId: new Types.ObjectId(userId),
+          code,
+          title,
+          description: desc,
+          awardedAt: new Date(),
+        });
+        // Icon will be added in frontend based on code
           await achievement.save();
           awards.push(achievement);
         }
@@ -101,6 +103,7 @@ export class AchievementsService {
           description: 'Complete 10 tasks in a single day',
           awardedAt: new Date(),
         });
+        // Icon will be added in frontend based on code
         return achievement.save();
       }
     }

@@ -6,6 +6,9 @@ export interface Reward {
   userId: string;
   title: string;
   xpThreshold: number;
+  itemType?: 'SKIN' | 'HAT' | 'WEAPON' | 'SHIELD' | 'ACCESSORY';
+  icon?: string;
+  color?: string;
   claimedAt?: string;
   isClaimable?: boolean;
   isLocked?: boolean;

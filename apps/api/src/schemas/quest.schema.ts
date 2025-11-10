@@ -11,6 +11,9 @@ export class Quest {
   @Prop({ required: true, enum: ['MAIN', 'SUB'] })
   type: 'MAIN' | 'SUB';
 
+  @Prop({ type: Types.ObjectId, ref: 'Quest' })
+  questId?: Types.ObjectId; // For sub-quests to link to main quest
+
   @Prop({ required: true })
   title: string;
 

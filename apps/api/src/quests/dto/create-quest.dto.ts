@@ -14,6 +14,10 @@ export class CreateQuestDto {
   @IsEnum(['MAIN', 'SUB'])
   type: 'MAIN' | 'SUB';
 
+  @IsOptional()
+  @IsString()
+  questId?: string; // For sub-quests to link to main quest
+
   @IsString()
   title: string;
 
